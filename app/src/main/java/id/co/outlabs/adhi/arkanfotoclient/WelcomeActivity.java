@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 public class WelcomeActivity extends AppCompatActivity {
 
-    private static int Interval = 4800;
+    private static int Interval = 4300;
 
     LinearLayout l1,l2;
     ImageView logo;
