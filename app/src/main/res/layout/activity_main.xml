@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="id.co.outlabs.adhi.arkanfotoclient.MainActivity"
+    android:background="@color/birutua"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="@drawable/backgroundmain"
+        android:orientation="vertical"
+        android:transitionName="backgoundtransition"
+        android:elevation="1dp">
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_marginTop="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="2dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp">
+                <android.support.v7.widget.CardView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:cardCornerRadius="20dp">
+                    <ImageView
+                        android:layout_margin="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/ic_menu_black_24dp" />
+                </android.support.v7.widget.CardView>
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="70dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toStartOf="@+id/button2"
+                    android:background="@drawable/roundedleft"
+                    android:text="Poinku"
+                    android:textColor="@color/kuning"/>
+
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:background="@drawable/roundedright"
+                    android:text="13"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/putih"/>
+            </RelativeLayout>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:src="@drawable/iconava"
+                app:civ_border_color="#fff"
+                android:layout_gravity="center"
+                app:civ_border_width="4.5dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Terus tingkatkan poinmu dan dapatkan hadiahnya"
+                android:textColor="@color/putih"
+                android:textSize="17sp"
+                android:layout_marginRight="45dp"
+                android:layout_marginLeft="45dp"
+                android:layout_marginTop="10dp"
+                android:textAlignment="center"/>
+
+            <android.support.v7.widget.CardView
+                android:layout_marginTop="20dp"
+                android:layout_width="250dp"
+                android:layout_height="320dp"
+                app:cardCornerRadius="10dp"
+                android:layout_marginLeft="15dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="60dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="30dp"
+                        android:orientation="vertical"
+                        android:background="@color/kuning"
+                        android:padding="2dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:text="poin"
+                            android:textSize="12sp"
+                            android:textColor="@color/putih"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:textSize="26sp"
+                            android:textStyle="bold"
+                            android:text="15"
+                            android:textColor="@color/putih"/>
+
+                    </LinearLayout>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:orientation="vertical"
+                android:background="@color/putih">
+
+            </LinearLayout>
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:background="#f1f1f1">
+
+            </GridLayout>
+            <LinearLayout
+                android:layout_marginTop="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:orientation="vertical"
+                android:background="@color/birutua">
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Arkan Foto 2018"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:textColor="@color/putih"
+                    android:textSize="18sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

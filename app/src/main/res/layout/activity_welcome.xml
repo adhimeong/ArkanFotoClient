@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/birutua"
+    tools:context="id.co.outlabs.adhi.arkanfotoclient.WelcomeActivity">
+    <LinearLayout
+        android:transitionName="backgoundtransition"
+        android:id="@+id/l1"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:orientation="vertical"
+        android:background="@drawable/backgroundwellcome">
+
+        <ImageView
+            android:id="@+id/imglogo"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:layout_marginTop="50dp"
+            app:srcCompat="@drawable/logo"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/txtselamatdatang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selamat Datang"
+            android:textColor="#FFFF"
+            android:textStyle="bold"
+            android:layout_marginTop="25dp"
+            android:textSize="28sp"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/l2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txtnama"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Adhi Ismail Hasan"
+            android:textSize="26sp"
+            android:textColor="#f98501"
+            android:layout_gravity="center"
+            android:textAlignment="center"/>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="70dp"
+            android:text="Mari Kita lihat point dan hadiah saat ini"
+            android:textColor="#FFFF"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:textAlignment="center"/>
+
+    </LinearLayout>
+</LinearLayout>
