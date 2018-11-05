@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="20dp">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="295dp"
+        android:layout_height="180dp"
+        app:cardCornerRadius="20dp">
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/listpemenangfoto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/hadiah"/>
+    </android.support.v7.widget.CardView>
+    <TextView
+        android:id="@+id/listpemenangjudul"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="Suryadi mendapatkan mobil ertiga"
+        android:textColor="@color/birutua"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/listpemenangtanggal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="2018-09-07"
+            android:textSize="18sp"
+            android:textColor="@color/kuning"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/listpemenangbtnlengkap"
+            android:layout_marginTop="15dp"
+            android:layout_weight="1"
+            android:layout_width="184dp"
+            android:layout_height="28dp"
+            android:textSize="12sp"
+            android:text="Selengkapnya"
+            android:textColor="@color/putih"
+            android:background="@drawable/roundedkecil"/>
+    </LinearLayout>
+
+</LinearLayout>
