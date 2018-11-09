@@ -12,14 +12,6 @@ public class DataHadiahController {
     public String jumlah_point;
     public String jumlah_items;
 
-    public String getJumlah_items() {
-        return jumlah_items;
-    }
-
-    public void setJumlah_items(String jumlah_items) {
-        this.jumlah_items = jumlah_items;
-    }
-
     public String getId_hadiah() {
         return id_hadiah;
     }
@@ -52,4 +44,11 @@ public class DataHadiahController {
         this.jumlah_point = jumlah_point;
     }
 
+    public String getJumlah_items() {
+        return jumlah_items;
+    }
+
+    public void setJumlah_items(String jumlah_items) {
+        this.jumlah_items = jumlah_items;
+    }
 }

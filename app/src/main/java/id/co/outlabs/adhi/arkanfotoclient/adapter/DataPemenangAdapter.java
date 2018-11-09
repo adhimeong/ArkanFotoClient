@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -69,6 +70,13 @@ public class DataPemenangAdapter extends RecyclerView.Adapter<DataPemenangAdapte
         mImageLoader = MySingleton.getInstance(this.mContext).getImageLoader();
         IMAGE_URL = url + String.valueOf(data.getFoto());
         holder.pemenangfoto.setImageUrl(IMAGE_URL, mImageLoader);
+
+        holder.pemenangbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
     }
 

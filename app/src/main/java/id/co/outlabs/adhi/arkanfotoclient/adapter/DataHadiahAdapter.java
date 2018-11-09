@@ -1,11 +1,13 @@
 package id.co.outlabs.adhi.arkanfotoclient.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -33,6 +35,7 @@ public class DataHadiahAdapter extends RecyclerView.Adapter<DataHadiahAdapter.My
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public NetworkImageView fotohadiah;
         public TextView hadiahnama, hadiahpoint, hadiahitems;
+        public CardView cardhadiah;
 
         public MyViewHolder(View view) {
             super(view);
@@ -40,6 +43,7 @@ public class DataHadiahAdapter extends RecyclerView.Adapter<DataHadiahAdapter.My
             hadiahpoint = (TextView) view.findViewById(R.id.listjumlah_point);
             hadiahitems = (TextView) view.findViewById(R.id.listjumlahitem);
             fotohadiah = (NetworkImageView) view.findViewById(R.id.listfotohadiah);
+            cardhadiah = (CardView) view.findViewById(R.id.cardhadiah);
         }
     }
 
@@ -67,6 +71,13 @@ public class DataHadiahAdapter extends RecyclerView.Adapter<DataHadiahAdapter.My
         mImageLoader = MySingleton.getInstance(this.mContext).getImageLoader();
         IMAGE_URL = url + String.valueOf(data.getFoto_hadiah());
         holder.fotohadiah.setImageUrl(IMAGE_URL, mImageLoader);
+
+        holder.cardhadiah.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
     }
 

@@ -1,19 +1,25 @@
 package id.co.outlabs.adhi.arkanfotoclient;
 
+import android.animation.AnimatorInflater;
+import android.animation.StateListAnimator;
 import android.app.ProgressDialog;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -72,15 +78,31 @@ public class MainActivity extends AppCompatActivity {
 
     //animation
     ScrollView sc;
-    Animation bounce;
+    Animation bounce, sliddown, fadein;
+
+    //card
+    CardView cardsetting, cardsesama, cardbanklain, cardtunai, cardpulsa, cardbpjs, cardpln, cardcicilan, cardlain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //cardview
+        cardsetting = (CardView) findViewById(R.id.cardmenusetting);
+        cardsesama= (CardView) findViewById(R.id.cardmenusesama);
+        cardbanklain = (CardView) findViewById(R.id.cardmenuantar);
+        cardtunai = (CardView) findViewById(R.id.cardmenutarik);
+        cardpulsa = (CardView) findViewById(R.id.cardmenupulsa);
+        cardbpjs = (CardView) findViewById(R.id.cardmenubpjs);
+        cardpln = (CardView) findViewById(R.id.cardmenupln);
+        cardcicilan = (CardView) findViewById(R.id.cardmenucicilan);
+        cardlain = (CardView) findViewById(R.id.cardmenulain);
+
         sc = (ScrollView) findViewById(R.id.l3);
         bounce = AnimationUtils.loadAnimation(this,R.anim.bounce);
+        sliddown = AnimationUtils.loadAnimation(this, R.anim.slidedown);
+        fadein = AnimationUtils.loadAnimation(this, R.anim.fadein);
         sc.setAnimation(bounce);
 
         //progres dialog
@@ -94,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
+        recyclerView.setAnimation(fadein);
 
         //pemenang
         recyclerView2 = (RecyclerView) findViewById(R.id.recyclepemenang);
@@ -129,6 +152,63 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //cardclik
+        cardsetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"setting",Toast.LENGTH_SHORT).show();//
+            }
+        });
+        cardsesama.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"sesama",Toast.LENGTH_SHORT).show();//
+            }
+        });
+        cardbanklain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"bank lain",Toast.LENGTH_SHORT).show();//
+            }
+        });
+        cardtunai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"tunai",Toast.LENGTH_SHORT).show();//
+            }
+        });
+        cardpulsa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"pulsa",Toast.LENGTH_SHORT).show();//
+            }
+        });
+        cardbpjs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"bpjs",Toast.LENGTH_SHORT).show();//
+            }
+        });
+        cardpln.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"pln",Toast.LENGTH_SHORT).show();//
+            }
+        });
+        cardcicilan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"cicilan",Toast.LENGTH_SHORT).show();//
+            }
+        });
+        cardlain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"lain nya",Toast.LENGTH_SHORT).show();//
+            }
+        });
+
+
         load_banner_from_server();
         load_hadiah_form_server();
         load_pemenang_form_server();
@@ -136,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void load_pemenang_form_server(){
-        pd.show();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 url2,
@@ -174,7 +253,6 @@ public class MainActivity extends AppCompatActivity {
 
                         mAdapter2.notifyDataSetChanged();
 
-                        pd.hide();
                     }
                 },
                 new Response.ErrorListener() {
@@ -183,7 +261,6 @@ public class MainActivity extends AppCompatActivity {
                         if(error != null){
 
                             FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
-                            pd.hide();
                         }
                     }
                 }
@@ -195,7 +272,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void load_hadiah_form_server(){
-        pd.show();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 url,
@@ -235,7 +311,6 @@ public class MainActivity extends AppCompatActivity {
 
                         mAdapter.notifyDataSetChanged();
 
-                        pd.hide();
                     }
                 },
                 new Response.ErrorListener() {
@@ -244,7 +319,6 @@ public class MainActivity extends AppCompatActivity {
                         if(error != null){
 
                             FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
-                            pd.hide();
                         }
                     }
                 }
@@ -255,6 +329,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void load_banner_from_server(){
+
         pd.show();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
@@ -286,8 +361,10 @@ public class MainActivity extends AppCompatActivity {
 
                                 Log.d("urlbanner",fotobanner);
                             }
+                            pd.dismiss();
 
                         } catch (JSONException e) {
+                            pd.dismiss();
                             e.printStackTrace();
                         }
 
@@ -309,16 +386,14 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         dots[0].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.roundyellow));
-                        pd.hide();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if(error != null){
-
+                            pd.dismiss();
                             FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
-                            pd.hide();
                         }
                     }
                 }
