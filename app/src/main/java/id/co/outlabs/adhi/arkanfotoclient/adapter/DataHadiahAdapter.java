@@ -1,13 +1,17 @@
 package id.co.outlabs.adhi.arkanfotoclient.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -32,13 +36,17 @@ public class DataHadiahAdapter extends RecyclerView.Adapter<DataHadiahAdapter.My
     String IMAGE_URL ;
     Context mContext;
 
+    public Dialog myDialog;
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
+
         public NetworkImageView fotohadiah;
         public TextView hadiahnama, hadiahpoint, hadiahitems;
         public CardView cardhadiah;
 
         public MyViewHolder(View view) {
             super(view);
+
             hadiahnama = (TextView) view.findViewById(R.id.listnamahadiah);
             hadiahpoint = (TextView) view.findViewById(R.id.listjumlah_point);
             hadiahitems = (TextView) view.findViewById(R.id.listjumlahitem);
@@ -47,7 +55,8 @@ public class DataHadiahAdapter extends RecyclerView.Adapter<DataHadiahAdapter.My
         }
     }
 
-    public DataHadiahAdapter(List<DataHadiahController> Listdata) {
+    public DataHadiahAdapter(Context context, List<DataHadiahController> Listdata) {
+        this.mContext = context;
         this.Listdata = Listdata;
     }
 
@@ -75,6 +84,34 @@ public class DataHadiahAdapter extends RecyclerView.Adapter<DataHadiahAdapter.My
         holder.cardhadiah.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                myDialog = new Dialog(mContext);
+                myDialog.setContentView(R.layout.dialoghadiah);
+
+                TextView dialogketerangan = (TextView) myDialog.findViewById(R.id.dialoghadiahketerangan);
+                ImageView dialogimage = (ImageView) myDialog.findViewById(R.id.dialoghadiahimage);
+                Button dialogbtnambil = (Button) myDialog.findViewById(R.id.dialoghadiahambil);
+                Button dialogbtnclose = (Button) myDialog.findViewById(R.id.dialoghadiahclose);
+
+                dialogketerangan.setText("poinmu siap dipakai");
+                dialogimage.setImageResource(R.drawable.dialoggift);
+
+                dialogbtnambil.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
+
+
+                dialogbtnclose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        myDialog.dismiss();
+                    }
+                });
+                myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                myDialog.show();
 
             }
         });

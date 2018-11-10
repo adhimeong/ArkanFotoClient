@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
         //hadiah
         recyclerView = (RecyclerView) findViewById(R.id.recyclehadiah);
-        mAdapter = new DataHadiahAdapter(listdatahadiah);
+        mAdapter = new DataHadiahAdapter(this, listdatahadiah);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this.getApplicationContext(),LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
