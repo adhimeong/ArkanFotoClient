@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
         //pemenang
         recyclerView2 = (RecyclerView) findViewById(R.id.recyclepemenang);
-        mAdapter2 = new DataPemenangAdapter(listdatapemenang);
+        mAdapter2 = new DataPemenangAdapter(this,listdatapemenang);
         RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(this.getApplicationContext(),LinearLayoutManager.HORIZONTAL, false);
         recyclerView2.setLayoutManager(mLayoutManager2);
         recyclerView2.setItemAnimator(new DefaultItemAnimator());
@@ -237,12 +237,14 @@ public class MainActivity extends AppCompatActivity {
                                 String judul_berita = jsonobject.getString("judul_berita").trim();
                                 String foto_berita = jsonobject.getString("foto_berita").trim();
                                 String tanggal_berita = jsonobject.getString("tanggal_berita").trim();
+                                String isi_berita = jsonobject.getString("isi_berita").trim();
 
 
                                 DataPemenangController d2 = new DataPemenangController();
                                 d2.setFoto(foto_berita.toString());
                                 d2.setJudul(judul_berita.toString());
                                 d2.setTanggal(tanggal_berita.toString());
+                                d2.setIsi(isi_berita);
 
                                 listdatapemenang.add(d2);
 

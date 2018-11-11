@@ -1,13 +1,18 @@
 package id.co.outlabs.adhi.arkanfotoclient.adapter;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -15,7 +20,6 @@ import com.android.volley.toolbox.NetworkImageView;
 import java.util.List;
 
 import id.co.outlabs.adhi.arkanfotoclient.R;
-import id.co.outlabs.adhi.arkanfotoclient.getset.DataHadiahController;
 import id.co.outlabs.adhi.arkanfotoclient.getset.DataPemenangController;
 import id.co.outlabs.adhi.arkanfotoclient.volley.MySingleton;
 import id.co.outlabs.adhi.arkanfotoclient.volley.Server;
@@ -33,6 +37,8 @@ public class DataPemenangAdapter extends RecyclerView.Adapter<DataPemenangAdapte
     String IMAGE_URL ;
     Context mContext;
 
+    public Dialog myDialog;
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public NetworkImageView pemenangfoto;
         public TextView pemenangjudul, pemenangtanggal;
@@ -47,7 +53,8 @@ public class DataPemenangAdapter extends RecyclerView.Adapter<DataPemenangAdapte
         }
     }
 
-    public DataPemenangAdapter(List<DataPemenangController> Listdata) {
+    public DataPemenangAdapter( Context context, List<DataPemenangController> Listdata) {
+        this.mContext = context;
         this.Listdata = Listdata;
     }
 
@@ -61,9 +68,9 @@ public class DataPemenangAdapter extends RecyclerView.Adapter<DataPemenangAdapte
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-        DataPemenangController data = Listdata.get(position);
+        final DataPemenangController data = Listdata.get(position);
         holder.pemenangjudul.setText(data.getJudul().toString());
         holder.pemenangtanggal.setText(data.getTanggal().toString());
 
@@ -71,9 +78,69 @@ public class DataPemenangAdapter extends RecyclerView.Adapter<DataPemenangAdapte
         IMAGE_URL = url + String.valueOf(data.getFoto());
         holder.pemenangfoto.setImageUrl(IMAGE_URL, mImageLoader);
 
+        holder.pemenangfoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myDialog = new Dialog(mContext);
+                myDialog.setContentView(R.layout.dialogpemenang);
+
+                TextView dialogjudul = (TextView) myDialog.findViewById(R.id.dialogpemenangjudul);
+                TextView dialogtanggal = (TextView) myDialog.findViewById(R.id.dialogpemenangtanggal);
+                TextView dialogisi = (TextView) myDialog.findViewById(R.id.dialogpemenangisi);
+                NetworkImageView dialogfoto = (NetworkImageView) myDialog.findViewById(R.id.dialogpemenangfoto);
+                Button dialogbtnclose = (Button) myDialog.findViewById(R.id.dialogpemenangtutup);
+
+                dialogjudul.setText(data.getJudul().toString());
+                dialogtanggal.setText(data.getTanggal().toString());
+                dialogisi.setText(data.getIsi().toString());
+
+                mImageLoader = MySingleton.getInstance(mContext).getImageLoader();
+                IMAGE_URL = url + String.valueOf(data.getFoto());
+                dialogfoto.setImageUrl(IMAGE_URL, mImageLoader);
+
+                dialogbtnclose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        myDialog.dismiss();
+                    }
+                });
+
+                myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                myDialog.show();
+            }
+        });
+
         holder.pemenangbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                myDialog = new Dialog(mContext);
+                myDialog.setContentView(R.layout.dialogpemenang);
+
+                TextView dialogjudul = (TextView) myDialog.findViewById(R.id.dialogpemenangjudul);
+                TextView dialogtanggal = (TextView) myDialog.findViewById(R.id.dialogpemenangtanggal);
+                TextView dialogisi = (TextView) myDialog.findViewById(R.id.dialogpemenangisi);
+                NetworkImageView dialogfoto = (NetworkImageView) myDialog.findViewById(R.id.dialogpemenangfoto);
+                Button dialogbtnclose = (Button) myDialog.findViewById(R.id.dialogpemenangtutup);
+
+                dialogjudul.setText(data.getJudul().toString());
+                dialogtanggal.setText(data.getTanggal().toString());
+                dialogisi.setText(data.getIsi().toString());
+
+                mImageLoader = MySingleton.getInstance(mContext).getImageLoader();
+                IMAGE_URL = url + String.valueOf(data.getFoto());
+                dialogfoto.setImageUrl(IMAGE_URL, mImageLoader);
+
+                dialogbtnclose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        myDialog.dismiss();
+                    }
+                });
+
+                myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                myDialog.show();
+
 
             }
         });
