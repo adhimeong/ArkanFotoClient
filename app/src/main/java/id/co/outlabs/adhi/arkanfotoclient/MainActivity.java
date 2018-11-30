@@ -3,6 +3,7 @@ package id.co.outlabs.adhi.arkanfotoclient;
 import android.animation.AnimatorInflater;
 import android.animation.StateListAnimator;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -162,49 +163,65 @@ public class MainActivity extends AppCompatActivity {
         cardsesama.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"sesama",Toast.LENGTH_SHORT).show();//
+                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                i.putExtra("aksi", "sesama");
+                startActivity(i);
             }
         });
         cardbanklain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"bank lain",Toast.LENGTH_SHORT).show();//
+                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                i.putExtra("aksi", "banklain");
+                startActivity(i);
             }
         });
         cardtunai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"tunai",Toast.LENGTH_SHORT).show();//
+                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                i.putExtra("aksi", "tunai");
+                startActivity(i);
             }
         });
         cardpulsa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"pulsa",Toast.LENGTH_SHORT).show();//
+                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                i.putExtra("aksi", "pulsa");
+                startActivity(i);
             }
         });
         cardbpjs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"bpjs",Toast.LENGTH_SHORT).show();//
+                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                i.putExtra("aksi", "bpjs");
+                startActivity(i);
             }
         });
         cardpln.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"pln",Toast.LENGTH_SHORT).show();//
+                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                i.putExtra("aksi", "pln");
+                startActivity(i);
             }
         });
         cardcicilan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"cicilan",Toast.LENGTH_SHORT).show();//
+                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                i.putExtra("aksi", "cicilan");
+                startActivity(i);
             }
         });
         cardlain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"lain nya",Toast.LENGTH_SHORT).show();//
+                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                i.putExtra("aksi", "lainnya");
+                startActivity(i);
             }
         });
 
@@ -250,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
 
                             }
                         } catch (JSONException e) {
+
                             e.printStackTrace();
                         }
 
@@ -261,8 +279,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if(error != null){
-
-                            FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
+                            startActivity(new Intent(MainActivity.this, GagalKoneksiActivity.class));
+                            FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_SHORT, FancyToast.ERROR,true).show();
                         }
                     }
                 }
@@ -319,8 +337,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if(error != null){
-
-                            FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
+                            startActivity(new Intent(MainActivity.this, GagalKoneksiActivity.class));
+                            FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_SHORT, FancyToast.ERROR,true).show();
                         }
                     }
                 }
@@ -367,8 +385,10 @@ public class MainActivity extends AppCompatActivity {
 
                         } catch (JSONException e) {
                             pd.dismiss();
+
                             e.printStackTrace();
                         }
+
 
                         viewPager.setAdapter(bannerAdapter);
 
@@ -395,7 +415,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         if(error != null){
                             pd.dismiss();
-                            FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
+                            startActivity(new Intent(MainActivity.this, GagalKoneksiActivity.class));
+                            FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_SHORT, FancyToast.ERROR,true).show();
                         }
                     }
                 }

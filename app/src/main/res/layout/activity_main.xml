@@ -384,7 +384,7 @@
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
                 <android.support.v7.widget.CardView
-                    android:id="@+id/cardmenulain"
+                    android:id="@+id/cardmenucicilan"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:layout_margin="10dp"
@@ -420,7 +420,7 @@
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
                 <android.support.v7.widget.CardView
-                    android:id="@+id/cardmenucicilan"
+                    android:id="@+id/cardmenulain"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:layout_margin="10dp"

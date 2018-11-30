@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="id.co.outlabs.adhi.arkanfotoclient.TransaksiActivity"
+    android:background="@color/birutua"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_marginTop="-100dp"
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="@drawable/backgroundmain"
+        android:orientation="vertical"
+        android:transitionName="backgoundtransition"
+        android:elevation="1dp">
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/l3"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="45dp"
+            android:paddingTop="10dp">
+
+            <EditText
+                android:id="@+id/edittransaksitujuan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:textSize="18dp"
+                android:hint="no rekening tujuan"
+                android:inputType="number"
+                android:textColor="@color/kuning"
+                android:background="@drawable/roundedkecilputih"
+                android:padding="7dp"
+                android:layout_margin="15dp"/>
+
+
+            <faranjit.currency.edittext.CurrencyEditText
+                android:id="@+id/edittransaksinominal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="nominal"
+                android:textStyle="bold"
+                android:textColor="@color/kuning"
+                android:inputType="numberDecimal"
+                app:locale="id"
+                android:textSize="18dp"
+                app:showSymbol="false"
+                android:background="@drawable/roundedkecilputih"
+                android:padding="7dp"
+                android:layout_margin="15dp"/>
+
+
+            <EditText
+                android:id="@+id/edittransaksipenerima"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="penerima"
+                android:textSize="18dp"
+                android:inputType="text"
+                android:textColor="@color/kuning"
+                android:background="@drawable/roundedkecilputih"
+                android:padding="7dp"
+                android:layout_margin="15dp"/>
+
+            <EditText
+                android:id="@+id/edittransaksibank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="bank"
+                android:textSize="18dp"
+                android:inputType="text"
+                android:textColor="@color/kuning"
+                android:background="@drawable/roundedkecilputih"
+                android:padding="7dp"
+                android:layout_margin="15dp"/>
+
+            <Button
+                android:id="@+id/btntransasibatal"
+                android:background="@drawable/strokeputih"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/putih"
+                android:text="BATAL"
+                android:layout_margin="10dp"/>
+
+            <Button
+                android:id="@+id/btntransasiproses"
+                android:background="@drawable/roundedkecil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/putih"
+                android:text="PROSES"
+                android:layout_margin="10dp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+</FrameLayout>
