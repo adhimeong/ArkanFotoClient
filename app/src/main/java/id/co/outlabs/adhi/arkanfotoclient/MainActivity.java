@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -33,7 +34,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import id.co.outlabs.adhi.arkanfotoclient.adapter.BannerAdapter;
 import id.co.outlabs.adhi.arkanfotoclient.adapter.DataHadiahAdapter;
@@ -41,10 +44,15 @@ import id.co.outlabs.adhi.arkanfotoclient.adapter.DataPemenangAdapter;
 import id.co.outlabs.adhi.arkanfotoclient.getset.DataBannerController;
 import id.co.outlabs.adhi.arkanfotoclient.getset.DataHadiahController;
 import id.co.outlabs.adhi.arkanfotoclient.getset.DataPemenangController;
+import id.co.outlabs.adhi.arkanfotoclient.getset.UserController;
 import id.co.outlabs.adhi.arkanfotoclient.volley.MySingleton;
 import id.co.outlabs.adhi.arkanfotoclient.volley.Server;
 
 public class MainActivity extends AppCompatActivity {
+
+    //point
+    String urldata4 = "app/perolehanpoint.php";
+    String url4 = Server.url_server +urldata4;
 
     //banner
     private ProgressDialog pd;
@@ -81,6 +89,11 @@ public class MainActivity extends AppCompatActivity {
     ScrollView sc;
     Animation bounce, sliddown, fadein;
 
+    //point
+    int pointperolehanint;
+    String no_kartu;
+    Button pointview;
+
     //card
     CardView cardsetting, cardsesama, cardbanklain, cardtunai, cardpulsa, cardbpjs, cardpln, cardcicilan, cardlain;
 
@@ -88,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        UserController user = SharedPrefManager.getInstance(MainActivity.this).getUser();
+        no_kartu = user.getNo_kartu();
 
         //cardview
         cardsetting = (CardView) findViewById(R.id.cardmenusetting);
@@ -99,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
         cardpln = (CardView) findViewById(R.id.cardmenupln);
         cardcicilan = (CardView) findViewById(R.id.cardmenucicilan);
         cardlain = (CardView) findViewById(R.id.cardmenulain);
+        pointview = (Button) findViewById(R.id.point2);
+
 
         sc = (ScrollView) findViewById(R.id.l3);
         bounce = AnimationUtils.loadAnimation(this,R.anim.bounce);
@@ -225,11 +243,71 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        load_point_from_server(no_kartu);
         load_banner_from_server();
         load_hadiah_form_server();
         load_pemenang_form_server();
 
+    }
+
+    public void load_point_from_server(final String kartu){
+        pd.show();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                url4,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("string",response);
+
+                        try {
+
+                            JSONArray jsonarray = new JSONArray(response);
+
+                            for(int i=0; i < jsonarray.length(); i++) {
+
+                                JSONObject jsonobject = jsonarray.getJSONObject(i);
+
+                                String nama_pelanggan = jsonobject.getString("nama_pelanggan").trim();
+                                String tanggal_pasif = jsonobject.getString("tanggal_pasif").trim();
+                                String skor_point = jsonobject.getString("jumlah_point").trim();
+
+                                pointview.setText(skor_point);
+                                Log.d("point", skor_point);
+                                pointperolehanint = Integer.parseInt(skor_point);
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        pd.hide();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if(error != null){
+
+                            FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
+                            pd.hide();
+                        }
+                    }
+                }
+
+        )
+        {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("no_kartu", kartu);
+                return params;
+            }
+        };
+
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
     public void load_pemenang_form_server(){
