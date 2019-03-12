@@ -40,7 +40,12 @@
         <activity android:name=".TransaksiActivity" />
         <activity android:name=".GagalKoneksiActivity" />
         <activity android:name=".PrintActivity" />
-        <activity android:name=".DeviceListActivity"></activity>
+        <activity android:name=".DeviceListActivity" />
+        <activity android:name=".ProfilActivity" />
+        <activity
+            android:name=".HalamanUtamaActivity"
+            android:label="@string/title_activity_halaman_utama"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@ package id.co.outlabs.adhi.arkanfotoclient.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.CardView;
@@ -15,6 +16,11 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.util.List;
 
@@ -35,8 +41,10 @@ public class DataHadiahAdapter extends RecyclerView.Adapter<DataHadiahAdapter.My
     String url = Server.url_server +"app/hadiah/";
     String IMAGE_URL ;
     Context mContext;
+    int pointuser, pointhadiah;
+    String no_kartu;
 
-    public Dialog myDialog;
+    public Dialog myDialog, dialogQrcode;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -55,9 +63,12 @@ public class DataHadiahAdapter extends RecyclerView.Adapter<DataHadiahAdapter.My
         }
     }
 
-    public DataHadiahAdapter(Context context, List<DataHadiahController> Listdata) {
+    public DataHadiahAdapter(Context context, List<DataHadiahController> Listdata, int pointuser, String no_kartu) {
         this.mContext = context;
         this.Listdata = Listdata;
+        this.pointuser = pointuser;
+        this.no_kartu = no_kartu;
+
     }
 
     @Override
@@ -72,7 +83,7 @@ public class DataHadiahAdapter extends RecyclerView.Adapter<DataHadiahAdapter.My
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        DataHadiahController data = Listdata.get(position);
+        final DataHadiahController data = Listdata.get(position);
         holder.hadiahnama.setText(data.getNama_hadiah());
         holder.hadiahpoint.setText(data.getJumlah_point());
         holder.hadiahitems.setText(data.getJumlah_items());
@@ -93,16 +104,56 @@ public class DataHadiahAdapter extends RecyclerView.Adapter<DataHadiahAdapter.My
                 Button dialogbtnambil = (Button) myDialog.findViewById(R.id.dialoghadiahambil);
                 Button dialogbtnclose = (Button) myDialog.findViewById(R.id.dialoghadiahclose);
 
-                dialogketerangan.setText("poinmu siap dipakai");
-                dialogimage.setImageResource(R.drawable.dialoggift);
+                pointhadiah = Integer.parseInt(data.getJumlah_point());
 
-                dialogbtnambil.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                if (pointuser >= pointhadiah){
+                    dialogketerangan.setText("poinmu siap dipakai");
+                    dialogimage.setImageResource(R.drawable.dialoggift);
 
-                    }
-                });
+                    dialogbtnambil.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
+                            myDialog.dismiss();
+
+                            dialogQrcode = new Dialog(mContext);
+                            dialogQrcode.setContentView(R.layout.dialogqrcode);
+
+                            ImageView dialogqrimage = (ImageView) dialogQrcode.findViewById(R.id.dialogqrcodeimage);
+                            Button dialogqrbtnclose = (Button) dialogQrcode.findViewById(R.id.dialogqrcodeclose);
+
+                            String idhadiah = data.getId_hadiah();
+                            String nokartu = no_kartu;
+                            String text2Qr = nokartu+","+idhadiah;
+
+                            MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+                            try {
+
+                                BitMatrix bitMatrix = multiFormatWriter.encode(text2Qr, BarcodeFormat.QR_CODE,500,500);
+                                BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                                Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                                dialogqrimage.setImageBitmap(bitmap);
+                            } catch (WriterException e) {
+                                e.printStackTrace();
+                            }
+
+                            dialogqrbtnclose.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialogQrcode.dismiss();
+                                }
+                            });
+
+                            dialogQrcode.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            dialogQrcode.show();
+                        }
+                    });
+
+                }else{
+                    dialogketerangan.setText("poinmu belum cukup");
+                    dialogimage.setImageResource(R.drawable.dialogpoin);
+                    dialogbtnambil.setVisibility(View.GONE);
+                }
 
                 dialogbtnclose.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -110,6 +161,7 @@ public class DataHadiahAdapter extends RecyclerView.Adapter<DataHadiahAdapter.My
                         myDialog.dismiss();
                     }
                 });
+
                 myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 myDialog.show();
 

@@ -1,17 +1,22 @@
 package id.co.outlabs.adhi.arkanfotoclient;
 
+
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -45,7 +50,11 @@ import id.co.outlabs.adhi.arkanfotoclient.getset.UserController;
 import id.co.outlabs.adhi.arkanfotoclient.volley.MySingleton;
 import id.co.outlabs.adhi.arkanfotoclient.volley.Server;
 
-public class MainActivity extends AppCompatActivity {
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class DashBoardFragment extends Fragment {
 
     //point
     String urldata4 = "app/perolehanpoint.php";
@@ -91,36 +100,42 @@ public class MainActivity extends AppCompatActivity {
     Button pointview;
 
     //card
-    CardView cardsetting, cardsesama, cardbanklain, cardtunai, cardpulsa, cardbpjs, cardpln, cardcicilan, cardlain;
+    CardView cardsesama, cardbanklain, cardtunai, cardpulsa, cardbpjs, cardpln, cardcicilan, cardlain;
+
+
+    public DashBoardFragment() {
+        // Required empty public constructor
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_dash_board, container, false);
 
-        UserController user = SharedPrefManager.getInstance(MainActivity.this).getUser();
+        UserController user = SharedPrefManager.getInstance(getActivity()).getUser();
         no_kartu = user.getNo_kartu();
 
-        //cardview
-        cardsetting = (CardView) findViewById(R.id.cardmenusetting);
-        cardsesama= (CardView) findViewById(R.id.cardmenusesama);
-        cardbanklain = (CardView) findViewById(R.id.cardmenuantar);
-        cardtunai = (CardView) findViewById(R.id.cardmenutarik);
-        cardpulsa = (CardView) findViewById(R.id.cardmenupulsa);
-        cardbpjs = (CardView) findViewById(R.id.cardmenubpjs);
-        cardpln = (CardView) findViewById(R.id.cardmenupln);
-        cardcicilan = (CardView) findViewById(R.id.cardmenucicilan);
-        cardlain = (CardView) findViewById(R.id.cardmenulain);
-        pointview = (Button) findViewById(R.id.point2);
 
-        sc = (ScrollView) findViewById(R.id.l3);
-        bounce = AnimationUtils.loadAnimation(this,R.anim.bounce);
-        sliddown = AnimationUtils.loadAnimation(this, R.anim.slidedown);
-        fadein = AnimationUtils.loadAnimation(this, R.anim.fadein);
+        //cardview
+        cardsesama= (CardView) view.findViewById(R.id.cardmenusesama);
+        cardbanklain = (CardView) view.findViewById(R.id.cardmenuantar);
+        cardtunai = (CardView) view.findViewById(R.id.cardmenutarik);
+        cardpulsa = (CardView) view.findViewById(R.id.cardmenupulsa);
+        cardbpjs = (CardView) view.findViewById(R.id.cardmenubpjs);
+        cardpln = (CardView) view.findViewById(R.id.cardmenupln);
+        cardcicilan = (CardView) view.findViewById(R.id.cardmenucicilan);
+        cardlain = (CardView) view.findViewById(R.id.cardmenulain);
+        pointview = (Button) view.findViewById(R.id.point2);
+
+        sc = (ScrollView) view.findViewById(R.id.l3);
+        bounce = AnimationUtils.loadAnimation(getActivity(),R.anim.bounce);
+        sliddown = AnimationUtils.loadAnimation(getActivity(), R.anim.slidedown);
+        fadein = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
         sc.setAnimation(bounce);
 
         //progres dialog
-        pd = new ProgressDialog(MainActivity.this);
+        pd = new ProgressDialog(getActivity());
         pd.setMessage("loading");
 
         load_point_from_server(no_kartu);
@@ -129,23 +144,23 @@ public class MainActivity extends AppCompatActivity {
 
 
         //hadiah
-        recyclerView = (RecyclerView) findViewById(R.id.recyclehadiah);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this.getApplicationContext(),LinearLayoutManager.HORIZONTAL, false);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclehadiah);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAnimation(fadein);
 
         //pemenang
-        recyclerView2 = (RecyclerView) findViewById(R.id.recyclepemenang);
-        mAdapter2 = new DataPemenangAdapter(this,listdatapemenang);
-        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(this.getApplicationContext(),LinearLayoutManager.HORIZONTAL, false);
+        recyclerView2 = (RecyclerView) view.findViewById(R.id.recyclepemenang);
+        mAdapter2 = new DataPemenangAdapter(getActivity(),listdatapemenang);
+        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.HORIZONTAL, false);
         recyclerView2.setLayoutManager(mLayoutManager2);
         recyclerView2.setItemAnimator(new DefaultItemAnimator());
         recyclerView2.setAdapter(mAdapter2);
 
         //banner
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        sliderDotspanel = (LinearLayout) findViewById(R.id.SliderDots);
+        viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        sliderDotspanel = (LinearLayout) view.findViewById(R.id.SliderDots);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -156,10 +171,10 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
 
                 for(int i = 0; i< dotscount; i++){
-                    dots[i].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.roundblue));
+                    dots[i].setImageDrawable(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.roundblue));
                 }
 
-                dots[position].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.roundyellow));
+                dots[position].setImageDrawable(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.roundyellow));
 
             }
 
@@ -170,18 +185,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //cardclik
-        cardsetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent j = new Intent(MainActivity.this, ProfilActivity.class);
-                startActivity(j);
-                Toast.makeText(getApplicationContext(),"setting",Toast.LENGTH_SHORT).show();//
-            }
-        });
         cardsesama.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                Intent i = new Intent(getActivity(), TransaksiActivity.class);
                 i.putExtra("aksi", "sesama");
                 startActivity(i);
             }
@@ -189,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         cardbanklain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                Intent i = new Intent(getActivity(), TransaksiActivity.class);
                 i.putExtra("aksi", "banklain");
                 startActivity(i);
             }
@@ -197,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
         cardtunai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                Intent i = new Intent(getActivity(), TransaksiActivity.class);
                 i.putExtra("aksi", "tunai");
                 startActivity(i);
             }
@@ -205,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
         cardpulsa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                Intent i = new Intent(getActivity(), TransaksiActivity.class);
                 i.putExtra("aksi", "pulsa");
                 startActivity(i);
             }
@@ -213,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
         cardbpjs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                Intent i = new Intent(getActivity(), TransaksiActivity.class);
                 i.putExtra("aksi", "bpjs");
                 startActivity(i);
             }
@@ -221,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
         cardpln.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                Intent i = new Intent(getActivity(), TransaksiActivity.class);
                 i.putExtra("aksi", "pln");
                 startActivity(i);
             }
@@ -229,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         cardcicilan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                Intent i = new Intent(getActivity(), TransaksiActivity.class);
                 i.putExtra("aksi", "cicilan");
                 startActivity(i);
             }
@@ -237,12 +244,14 @@ public class MainActivity extends AppCompatActivity {
         cardlain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, TransaksiActivity.class);
+                Intent i = new Intent(getActivity(), TransaksiActivity.class);
                 i.putExtra("aksi", "lainnya");
                 startActivity(i);
             }
         });
 
+        // Inflate the layout for this fragment
+        return view;
     }
 
     public void load_point_from_server(final String kartu){
@@ -277,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         //setting untuk load hadiah
-                        mAdapter = new DataHadiahAdapter(MainActivity.this, listdatahadiah, pointperolehanint, no_kartu);
+                        mAdapter = new DataHadiahAdapter(getActivity(), listdatahadiah, pointperolehanint, no_kartu);
                         recyclerView.setAdapter(mAdapter);
                         load_hadiah_form_server();
                         pd.hide();
@@ -288,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         if(error != null){
 
-                            FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
+                            FancyToast.makeText(getActivity().getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
                             pd.hide();
                         }
                     }
@@ -305,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+        MySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
     public void load_pemenang_form_server(){
@@ -355,15 +364,15 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if(error != null){
-                            startActivity(new Intent(MainActivity.this, GagalKoneksiActivity.class));
-                            FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_SHORT, FancyToast.ERROR,true).show();
+                            startActivity(new Intent(getActivity(), GagalKoneksiActivity.class));
+                            FancyToast.makeText(getActivity().getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_SHORT, FancyToast.ERROR,true).show();
                         }
                     }
                 }
 
         );
 
-        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+        MySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
 
     }
 
@@ -413,15 +422,15 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if(error != null){
-                            startActivity(new Intent(MainActivity.this, GagalKoneksiActivity.class));
-                            FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_SHORT, FancyToast.ERROR,true).show();
+                            startActivity(new Intent(getActivity(), GagalKoneksiActivity.class));
+                            FancyToast.makeText(getActivity().getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_SHORT, FancyToast.ERROR,true).show();
                         }
                     }
                 }
 
         );
 
-        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+        MySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
     public void load_banner_from_server(){
@@ -438,7 +447,7 @@ public class MainActivity extends AppCompatActivity {
 
                         try {
 
-                            bannerAdapter = new BannerAdapter(databannerController,MainActivity.this);
+                            bannerAdapter = new BannerAdapter(databannerController,getActivity());
 
                             JSONArray jsonarray = new JSONArray(response);
 
@@ -473,8 +482,8 @@ public class MainActivity extends AppCompatActivity {
 
                         for(int i = 0; i < dotscount; i++){
 
-                            dots[i] = new ImageView(MainActivity.this);
-                            dots[i].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.roundblue));
+                            dots[i] = new ImageView(getActivity());
+                            dots[i].setImageDrawable(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.roundblue));
 
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
@@ -483,7 +492,7 @@ public class MainActivity extends AppCompatActivity {
                             sliderDotspanel.addView(dots[i], params);
                         }
 
-                        dots[0].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.roundyellow));
+                        dots[0].setImageDrawable(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.roundyellow));
                     }
                 },
                 new Response.ErrorListener() {
@@ -491,15 +500,16 @@ public class MainActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         if(error != null){
                             pd.dismiss();
-                            startActivity(new Intent(MainActivity.this, GagalKoneksiActivity.class));
-                            FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_SHORT, FancyToast.ERROR,true).show();
+                            startActivity(new Intent(getActivity(), GagalKoneksiActivity.class));
+                            FancyToast.makeText(getActivity().getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_SHORT, FancyToast.ERROR,true).show();
                         }
                     }
                 }
 
         );
 
-        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+        MySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
 
     }
+
 }

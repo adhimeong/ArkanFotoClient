@@ -50,7 +50,7 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // TODO Auto-generated method stub
-                Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
+                Intent i = new Intent(WelcomeActivity.this, HalamanUtamaActivity.class);
 
                 Pair[] pairs = new Pair[1];
                 pairs[0] = new Pair<View, String>(l1,"backgoundtransition");

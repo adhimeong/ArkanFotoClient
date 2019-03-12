@@ -13,27 +13,28 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="40dp">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/putih"
+            android:text="Yah, internetnya mati..."
             android:textAlignment="center"
-            android:textSize="24sp"
-            android:text="Yah, internetnya mati..."/>
+            android:textColor="@color/putih"
+            android:textSize="24sp" />
 
         <ImageView
-            android:layout_margin="30dp"
             android:layout_width="match_parent"
             android:layout_height="300dp"
+            android:layout_margin="30dp"
             app:srcCompat="@drawable/gagalkonek" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/putih"
+            android:text="Cek koneksi wifi atau kuota mu ya..."
             android:textAlignment="center"
-            android:textSize="18sp"
-            android:text="Cek koneksi wifi atau kuota mu ya..."/>
+            android:textColor="@color/putih"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
