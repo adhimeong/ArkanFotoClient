@@ -21,7 +21,7 @@ public class GagalKoneksiActivity extends AppCompatActivity {
         btncoba.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(GagalKoneksiActivity.this, MainActivity.class));
+                startActivity(new Intent(GagalKoneksiActivity.this, HalamanUtamaActivity.class));
             }
         });
     }

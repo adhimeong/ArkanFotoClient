@@ -1,5 +1,6 @@
 package id.co.outlabs.adhi.arkanfotoclient;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -80,18 +81,19 @@ public class HalamanUtamaActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_point) {
+            //getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new UtamaFragment()).commit();
+        }else if(id == R.id.nav_tansaksi){
+            //Intent i = new Intent(getApplicationContext(), JenisTransaksiActivity.class);
+            //startActivity(i);
+            //getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new TransaksiFragment()).commit();
+        } else if (id == R.id.nav_haidah) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            //getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new PointKuFragment()).commit();
+        } else if(id == R.id.nav_kartu){
+            //getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new ProfilFragment()).commit();
+        } else if(id == R.id.nav_profil){
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new ProfilFragment()).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

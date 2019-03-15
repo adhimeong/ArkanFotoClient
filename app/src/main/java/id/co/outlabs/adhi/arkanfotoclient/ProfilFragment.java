@@ -1,11 +1,13 @@
 package id.co.outlabs.adhi.arkanfotoclient;
 
+
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -28,7 +30,11 @@ import id.co.outlabs.adhi.arkanfotoclient.getset.UserController;
 import id.co.outlabs.adhi.arkanfotoclient.volley.MySingleton;
 import id.co.outlabs.adhi.arkanfotoclient.volley.Server;
 
-public class ProfilActivity extends AppCompatActivity {
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class ProfilFragment extends Fragment {
 
     NetworkImageView imageprev;
     ImageLoader mImageLoader;
@@ -45,24 +51,29 @@ public class ProfilActivity extends AppCompatActivity {
     String nokartu;
 
 
+    public ProfilFragment() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profil);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_profil, container, false);
 
-        viewnama = (TextView) findViewById(R.id.txtprofilnama);
-        viewnokartu = (TextView) findViewById(R.id.txtprofilnokartu);
-        viewalamat = (TextView) findViewById(R.id.txtprofilalamat);
-        viewemail = (TextView) findViewById(R.id.txtprofilemail);
-        viewkontak = (TextView) findViewById(R.id.txtprofilkontak);
-        imageprev = (NetworkImageView) findViewById(R.id.profilprevimage);
+        viewnama = (TextView) view.findViewById(R.id.txtprofilnama);
+        viewnokartu = (TextView) view.findViewById(R.id.txtprofilnokartu);
+        viewalamat = (TextView) view.findViewById(R.id.txtprofilalamat);
+        viewemail = (TextView) view.findViewById(R.id.txtprofilemail);
+        viewkontak = (TextView) view.findViewById(R.id.txtprofilkontak);
+        imageprev = (NetworkImageView) view.findViewById(R.id.profilprevimage);
 
-        logoutbtn = (Button) findViewById(R.id.btnlogout);
-        updatebtn = (Button) findViewById(R.id.btnupdateprofil);
+        logoutbtn = (Button) view.findViewById(R.id.btnlogout);
+        updatebtn = (Button) view.findViewById(R.id.btnupdateprofil);
 
         //getting the current user
-        UserController user = SharedPrefManager.getInstance(this.getApplicationContext()).getUser();
-        pd = new ProgressDialog(this);
+        UserController user = SharedPrefManager.getInstance(getActivity().getApplicationContext()).getUser();
+        pd = new ProgressDialog(getActivity());
         pd.setMessage("loading");
 
         nokartu = user.getNo_kartu();
@@ -75,10 +86,14 @@ public class ProfilActivity extends AppCompatActivity {
         logoutbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPrefManager.getInstance(ProfilActivity.this).logout();
+                SharedPrefManager.getInstance(getActivity()).logout();
             }
         });
 
+
+
+        // Inflate the layout for this fragment
+        return view;
     }
 
     public void load_datapelanggan_from_server2(final String kartu) {
@@ -131,11 +146,11 @@ public class ProfilActivity extends AppCompatActivity {
                                 }
 
                                 if (foto.equals("null")){
-                                    mImageLoader = MySingleton.getInstance(ProfilActivity.this).getImageLoader();
+                                    mImageLoader = MySingleton.getInstance(getActivity()).getImageLoader();
                                     IMAGE_URL = url + String.valueOf(fotodefault);
                                     imageprev.setImageUrl(IMAGE_URL, mImageLoader);
                                 }else{
-                                    mImageLoader = MySingleton.getInstance(ProfilActivity.this.getApplicationContext()).getImageLoader();
+                                    mImageLoader = MySingleton.getInstance(getActivity().getApplicationContext()).getImageLoader();
                                     IMAGE_URL = url + String.valueOf(foto);
                                     imageprev.setImageUrl(IMAGE_URL, mImageLoader);
                                 }
@@ -152,7 +167,7 @@ public class ProfilActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         if(error != null){
 
-                            FancyToast.makeText(ProfilActivity.this,"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
+                            FancyToast.makeText(getActivity(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
                             pd.dismiss();
                         }
                     }
@@ -169,6 +184,7 @@ public class ProfilActivity extends AppCompatActivity {
             }
         };
 
-        MySingleton.getInstance(ProfilActivity.this).addToRequestQueue(stringRequest);
+        MySingleton.getInstance(getActivity()).addToRequestQueue(stringRequest);
     }
+
 }

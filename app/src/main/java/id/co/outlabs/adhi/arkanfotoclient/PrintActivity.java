@@ -400,7 +400,7 @@ public class PrintActivity extends Activity implements Runnable{
 
 
                         } catch (Exception e) {
-                            Log.e("MainActivity", "Exe ", e);
+                            Log.e("PrintActivity", "Exe ", e);
                         }
                     }
                 };
@@ -418,7 +418,7 @@ public class PrintActivity extends Activity implements Runnable{
                     mBluetoothAdapter.disable();
 
                 myDialog.dismiss();
-                startActivity(new Intent(PrintActivity.this, MainActivity.class));
+                startActivity(new Intent(PrintActivity.this, HalamanUtamaActivity.class));
             }
         });
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
