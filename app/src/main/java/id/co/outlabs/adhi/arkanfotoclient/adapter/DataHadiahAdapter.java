@@ -2,9 +2,11 @@ package id.co.outlabs.adhi.arkanfotoclient.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -123,6 +125,7 @@ public class DataHadiahAdapter extends RecyclerView.Adapter<DataHadiahAdapter.My
                             Button dialogqrbtnclose = (Button) dialogQrcode.findViewById(R.id.dialogqrcodeclose);
 
                             String idhadiah = data.getId_hadiah();
+                            final String namahadiah = data.getNama_hadiah();
                             String nokartu = no_kartu;
                             String text2Qr = nokartu+","+idhadiah;
 
@@ -140,6 +143,11 @@ public class DataHadiahAdapter extends RecyclerView.Adapter<DataHadiahAdapter.My
                             dialogqrbtnclose.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
+                                    Intent intent = new Intent();
+                                    intent.setAction(Intent.ACTION_VIEW);
+                                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                                    intent.setData(Uri.parse("https://wa.me/?text=ALHAMDULLILAH..%20hari%20ini..%20transaksi%20di%20BRILink%20ARKAN%20FOTO,%20saya%20bisa%20dapat%20" + namahadiah + ".%20Mau%20juga?%20datang%20aja%20ke%20ARKAN%20FOTO..%20lokasinya%20di%20sini..%20https://goo.gl/maps/4oC2Tiev9Cz"));
+                                    mContext.startActivity(intent);
                                     dialogQrcode.dismiss();
                                 }
                             });

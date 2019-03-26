@@ -81,17 +81,18 @@ public class HalamanUtamaActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_point) {
-            //getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new UtamaFragment()).commit();
+        if (id == R.id.nav_home){
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new DashBoardFragment()).commit();
+        } else if (id == R.id.nav_point) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new NavPointFragment()).commit();
         }else if(id == R.id.nav_tansaksi){
             //Intent i = new Intent(getApplicationContext(), JenisTransaksiActivity.class);
             //startActivity(i);
-            //getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new TransaksiFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new NavTransaksiFragment()).commit();
         } else if (id == R.id.nav_haidah) {
-            // Handle the camera action
-            //getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new PointKuFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new NavHadiahFragment()).commit();
         } else if(id == R.id.nav_kartu){
-            //getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new ProfilFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new NavKartuFragment()).commit();
         } else if(id == R.id.nav_profil){
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new ProfilFragment()).commit();
         }

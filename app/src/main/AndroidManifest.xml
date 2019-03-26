@@ -43,7 +43,7 @@
         <activity
             android:name=".HalamanUtamaActivity"
             android:label="@string/title_activity_halaman_utama"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +22,8 @@ public class DeviceListActivity extends Activity {
     protected static final String TAG = "TAG";
     private BluetoothAdapter mBluetoothAdapter;
     private ArrayAdapter<String> mPairedDevicesArrayAdapter;
+    Button scan, refresh;
+    String mNoDevices;
 
     @Override
     protected void onCreate(Bundle mSavedInstanceState) {
@@ -43,9 +47,38 @@ public class DeviceListActivity extends Activity {
                 mPairedDevicesArrayAdapter.add(mDevice.getName() + "\n" + mDevice.getAddress());
             }
         } else {
-            String mNoDevices = "None Paired";//getResources().getText(R.string.none_paired).toString();
+            mNoDevices = "Tidak ada Perangkat yang terhubung";//getResources().getText(R.string.none_paired).toString();
             mPairedDevicesArrayAdapter.add(mNoDevices);
         }
+
+        scan = (Button) findViewById(R.id.listbtnscanprint);
+        scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
+            }
+        });
+        refresh = (Button) findViewById(R.id.listbtnrefreshprint);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mPairedDevicesArrayAdapter.clear();
+
+                Set<BluetoothDevice> mPairedDevices = mBluetoothAdapter.getBondedDevices();
+
+                if (mPairedDevices.size() > 0) {
+                    findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
+                    for (BluetoothDevice mDevice : mPairedDevices) {
+                        mPairedDevicesArrayAdapter.add(mDevice.getName() + "\n" + mDevice.getAddress());
+                        //mPairedDevicesArrayAdapter.remove(mNoDevices);
+                    }
+                } else {
+                    mNoDevices = "Tidak ada Perangkat yang terhubung";//getResources().getText(R.string.none_paired).toString();
+                    mPairedDevicesArrayAdapter.add(mNoDevices);
+                }
+            }
+        });
     }
 
     @Override

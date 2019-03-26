@@ -5,24 +5,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/birutua"
     tools:context="id.co.outlabs.adhi.arkanfotoclient.DeviceListActivity">
 
-    <TextView
-        android:id="@+id/title_paired_devices"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#666"
-        android:paddingLeft="5dip"
-        android:text="Bluetooth Printers"
-        android:textColor="#fff"
-        android:visibility="gone" />
-
-    <ListView
-        android:id="@+id/paired_devices"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_weight="1"
-        android:stackFromBottom="true" />
+        android:padding="20dp">
+
+        <Button
+            android:id="@+id/listbtnscanprint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cari Printer"
+            android:textColor="@color/putih"
+            android:padding="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/roundedkecil"
+            android:layout_marginTop="30dp"/>
+        <TextView
+            android:id="@+id/title_paired_devices"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Pilih Printer Bluetooth di Bawah ini"
+            android:textAlignment="center"
+            android:textColor="#fff"
+            android:textSize="22sp"
+            android:layout_marginTop="50dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/paired_devices"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/putih"
+            android:layout_weight="1"
+            android:stackFromBottom="true" />
+        <Button
+            android:id="@+id/listbtnrefreshprint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Refresh List"
+            android:textColor="@color/putih"
+            android:padding="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/btnbackgroudorange"
+           />
+    </LinearLayout>
 
 </LinearLayout>

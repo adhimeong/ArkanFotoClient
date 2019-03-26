@@ -56,11 +56,14 @@ public class PrintActivity extends Activity implements Runnable{
 
     String nokartu, rektujuan, nominal, bank, penerima, kodebank, jenistransaksi, tarif;
     String totalbayar, tanggal, waktu;
+    Toast toastgagal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_print);
+
+        toastgagal = Toast.makeText(PrintActivity.this, "no Device", Toast.LENGTH_SHORT);
 
         UserController user = SharedPrefManager.getInstance(getApplicationContext()).getUser();
         nokartu = user.getNo_kartu();
@@ -121,6 +124,7 @@ public class PrintActivity extends Activity implements Runnable{
         btnscan = (CardView) findViewById(R.id.cardbtnscanprinter);
         btnscan.setOnClickListener(new View.OnClickListener() {
             public void onClick(View mView) {
+
                 mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if (mBluetoothAdapter == null) {
                     Toast.makeText(PrintActivity.this, "Message1", Toast.LENGTH_SHORT).show();
@@ -223,6 +227,9 @@ public class PrintActivity extends Activity implements Runnable{
         } catch (IOException eConnectException) {
             Log.d(TAG, "CouldNotConnectToSocket", eConnectException);
             closeSocket(mBluetoothSocket);
+            mBluetoothConnectProgressDialog.dismiss();
+            toastgagal.show();
+            finish();
             return;
         }
     }
@@ -270,7 +277,7 @@ public class PrintActivity extends Activity implements Runnable{
 
         TextView dialogketerangan = (TextView) myDialog.findViewById(R.id.dialoghadiahketerangan);
         ImageView dialogimage = (ImageView) myDialog.findViewById(R.id.dialoghadiahimage);
-        Button dialogbtnambil = (Button) myDialog.findViewById(R.id.dialoghadiahambil);
+        final Button dialogbtnambil = (Button) myDialog.findViewById(R.id.dialoghadiahambil);
         Button dialogbtnclose = (Button) myDialog.findViewById(R.id.dialoghadiahclose);
 
         dialogketerangan.setText("cetak antrian");
@@ -405,6 +412,7 @@ public class PrintActivity extends Activity implements Runnable{
                     }
                 };
                 t.start();
+                dialogbtnambil.setVisibility(View.INVISIBLE);
 
             }
         });
@@ -414,8 +422,10 @@ public class PrintActivity extends Activity implements Runnable{
             @Override
             public void onClick(View view) {
 
-                if (mBluetoothAdapter != null)
+                if (mBluetoothAdapter != null) {
+                    closeSocket(mBluetoothSocket);
                     mBluetoothAdapter.disable();
+                }
 
                 myDialog.dismiss();
                 startActivity(new Intent(PrintActivity.this, HalamanUtamaActivity.class));
