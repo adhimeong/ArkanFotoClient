@@ -37,9 +37,11 @@
         <activity android:name=".InputIdCardActivity" />
         <activity android:name=".ScanCardActivity" />
         <activity android:name=".TransaksiActivity" />
-        <activity android:name=".GagalKoneksiActivity" />
+        <activity android:name=".GagalKoneksiActivity"
+            android:noHistory="true"/>
         <activity android:name=".PrintActivity" />
-        <activity android:name=".DeviceListActivity" />
+        <activity android:name=".DeviceListActivity"
+            android:noHistory="true"/>
         <activity
             android:name=".HalamanUtamaActivity"
             android:label="@string/title_activity_halaman_utama"

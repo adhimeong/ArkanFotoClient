@@ -190,6 +190,7 @@ public class TransaksiActivity extends AppCompatActivity {
                 i.putExtra("kodebank", txtkodebank);
                 i.putExtra("jenistransaksi", txtjenistransaksi);
                 startActivity(i);
+                finish();
             }
         });
     }

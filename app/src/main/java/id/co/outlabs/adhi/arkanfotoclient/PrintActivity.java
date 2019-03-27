@@ -21,7 +21,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.shashank.sony.fancytoastlib.FancyToast;
 import com.skyfishjy.library.RippleBackground;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,13 +38,23 @@ import java.nio.ByteBuffer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import id.co.outlabs.adhi.arkanfotoclient.adapter.DataHadiahAdapter;
 import id.co.outlabs.adhi.arkanfotoclient.getset.UserController;
 import id.co.outlabs.adhi.arkanfotoclient.print.UnicodeFormatter;
+import id.co.outlabs.adhi.arkanfotoclient.volley.MySingleton;
+import id.co.outlabs.adhi.arkanfotoclient.volley.Server;
 
 public class PrintActivity extends Activity implements Runnable{
+
+    //point
+    String urldata = "app/perosestransaksi.php";
+    String url = Server.url_server +urldata;
+    private ProgressDialog pd;
 
     protected static final String TAG = "TAG";
     private static final int REQUEST_CONNECT_DEVICE = 1;
@@ -126,6 +145,7 @@ public class PrintActivity extends Activity implements Runnable{
             public void onClick(View mView) {
 
                 mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
                 if (mBluetoothAdapter == null) {
                     Toast.makeText(PrintActivity.this, "Message1", Toast.LENGTH_SHORT).show();
                 } else {
@@ -242,6 +262,7 @@ public class PrintActivity extends Activity implements Runnable{
         }
     }
 
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -273,12 +294,12 @@ public class PrintActivity extends Activity implements Runnable{
     public void  dialogprint(){
 
         myDialog = new Dialog(PrintActivity.this);
-        myDialog.setContentView(R.layout.dialoghadiah);
+        myDialog.setContentView(R.layout.dialogprint);
 
-        TextView dialogketerangan = (TextView) myDialog.findViewById(R.id.dialoghadiahketerangan);
-        ImageView dialogimage = (ImageView) myDialog.findViewById(R.id.dialoghadiahimage);
-        final Button dialogbtnambil = (Button) myDialog.findViewById(R.id.dialoghadiahambil);
-        Button dialogbtnclose = (Button) myDialog.findViewById(R.id.dialoghadiahclose);
+        TextView dialogketerangan = (TextView) myDialog.findViewById(R.id.dialogprintketerangan);
+        ImageView dialogimage = (ImageView) myDialog.findViewById(R.id.dialogprintimage);
+        final Button dialogbtnambil = (Button) myDialog.findViewById(R.id.dialogprintcetak);
+        Button dialogbtnclose = (Button) myDialog.findViewById(R.id.dialogprintclose);
 
         dialogketerangan.setText("cetak antrian");
         dialogimage.setImageResource(R.drawable.antrianprint);
@@ -309,7 +330,6 @@ public class PrintActivity extends Activity implements Runnable{
                             BILL = BILL + "\n";
                             BILL = BILL + "TANGGAL : " + tanggal + "\n";
                             BILL = BILL + "PUKUL : " + waktu + "\n";
-                            BILL = BILL + "\n";
                             BILL = BILL
                                     + "--------------------------------";
                             BILL = BILL + "JENIS : " + jenistransaksi + "\n";
@@ -370,7 +390,6 @@ public class PrintActivity extends Activity implements Runnable{
 
                             BILL = BILL
                                     + "\n--------------------------------";
-                            BILL = BILL + "\n\n";
 
                             BILL = BILL + "BIAYA ADMINISTRASI :" + "\n";
                             BILL = BILL + tarif + "\n";
@@ -411,8 +430,23 @@ public class PrintActivity extends Activity implements Runnable{
                         }
                     }
                 };
+
                 t.start();
                 dialogbtnambil.setVisibility(View.INVISIBLE);
+
+                try {
+                    t.join();
+                    //coba cik
+                    if (mBluetoothAdapter != null) {
+                        closeSocket(mBluetoothSocket);
+                        mBluetoothAdapter.disable();
+                    }
+                    myDialog.dismiss();
+                    startActivity(new Intent(PrintActivity.this, HalamanUtamaActivity.class));
+                    finish();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -429,11 +463,67 @@ public class PrintActivity extends Activity implements Runnable{
 
                 myDialog.dismiss();
                 startActivity(new Intent(PrintActivity.this, HalamanUtamaActivity.class));
+                finish();
             }
         });
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
 
+    }
+
+    public void load_tarifantrian_from_server(final String kartu){
+        pd.show();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                url,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("string",response);
+
+                        try {
+
+                            JSONArray jsonarray = new JSONArray(response);
+
+                            for(int i=0; i < jsonarray.length(); i++) {
+
+                                JSONObject jsonobject = jsonarray.getJSONObject(i);
+
+                                String tarifser = jsonobject.getString("tarif").trim();
+                                String antrianser = jsonobject.getString("antrian").trim();
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        pd.hide();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if(error != null){
+
+                            FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
+                            pd.hide();
+                        }
+                    }
+                }
+
+        )
+        {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("no_kartu", kartu);
+                return params;
+            }
+        };
+
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
 }
 
