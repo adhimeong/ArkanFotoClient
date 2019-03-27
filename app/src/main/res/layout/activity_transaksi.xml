@@ -75,7 +75,7 @@
                 android:padding="7dp"
                 android:layout_margin="15dp"/>
 
-            <EditText
+            <!--<EditText
                 android:id="@+id/edittransaksibank"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -85,7 +85,18 @@
                 android:textColor="@color/kuning"
                 android:background="@drawable/roundedkecilputih"
                 android:padding="7dp"
-                android:layout_margin="15dp"/>
+                android:layout_margin="15dp"/>-->
+
+            <AutoCompleteTextView
+                android:id="@+id/edittransaksibank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/kuning"
+                android:background="@drawable/roundedkecilputih"
+                android:textSize="18dp"
+                android:padding="7dp"
+                android:layout_margin="15dp"
+                android:hint="bank"/>
 
             <Button
                 android:id="@+id/btntransasibatal"
