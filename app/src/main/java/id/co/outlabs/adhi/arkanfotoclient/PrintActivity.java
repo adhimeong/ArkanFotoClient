@@ -52,7 +52,7 @@ import id.co.outlabs.adhi.arkanfotoclient.volley.Server;
 public class PrintActivity extends Activity implements Runnable{
 
     //point
-    String urldata = "app/perosestransaksi.php";
+    String urldata = "app/prosesantriantransaksi.php";
     String url = Server.url_server +urldata;
     private ProgressDialog pd;
 
@@ -73,9 +73,10 @@ public class PrintActivity extends Activity implements Runnable{
     private BluetoothSocket mBluetoothSocket;
     BluetoothDevice mBluetoothDevice;
 
-    String nokartu, rektujuan, nominal, bank, penerima, kodebank, jenistransaksi, tarif;
+    String nokartu, rektujuan, nominal, bank, penerima, kodebank, jenistransaksi, tarif, tarifser, antrianser, totalbayarser, antrian;
     String totalbayar, tanggal, waktu;
     Toast toastgagal;
+    String[] datatarifantrian;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,10 @@ public class PrintActivity extends Activity implements Runnable{
         UserController user = SharedPrefManager.getInstance(getApplicationContext()).getUser();
         nokartu = user.getNo_kartu();
 
+        //progres dialog
+        pd = new ProgressDialog(this);
+        pd.setMessage("loading");
+
         //ambil data dari fragment
         rektujuan = getIntent().getStringExtra("rektujuan");
         nominal = getIntent().getStringExtra("nominal");
@@ -95,42 +100,11 @@ public class PrintActivity extends Activity implements Runnable{
         kodebank = getIntent().getStringExtra("kodebank");
         jenistransaksi = getIntent().getStringExtra("jenistransaksi");
 
+
         //animasi
         rippleBackground=(RippleBackground)findViewById(R.id.scanprinter);
         rippleBackground.startRippleAnimation();
 
-        if (rektujuan != null){
-            Log.d("data1", rektujuan);
-        }
-
-        if (nominal !=null){
-            Log.d("data2", nominal);
-            tarif = "0";
-            int a = Integer.parseInt(nominal);
-            int b = Integer.parseInt(tarif);
-            int total = a + b;
-
-            totalbayar = String.valueOf(total);
-        }else{
-            totalbayar = "SESUAI TAGIHAN";
-            tarif = "SESUAI TAGIHAN";
-        }
-
-        if (penerima != null){
-            Log.d("data3", penerima);
-        }
-
-        if (bank != null){
-            Log.d("data4", bank);
-        }
-
-        if (kodebank != null){
-            Log.d("data5", kodebank);
-        }
-
-        if (jenistransaksi != null){
-            Log.d("data6", jenistransaksi);
-        }
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat mdformat = new SimpleDateFormat("HH:mm:ss");
@@ -268,6 +242,8 @@ public class PrintActivity extends Activity implements Runnable{
         public void handleMessage(Message msg) {
             mBluetoothConnectProgressDialog.dismiss();
             Toast.makeText(PrintActivity.this, "DeviceConnected", Toast.LENGTH_SHORT).show();
+            //nokartu, rektujuan, nominal, penerima, bank, kodebank, jenistransaksi
+            datatarifantrian = load_tarifantrian_from_server(nokartu, rektujuan, nominal, penerima, bank, kodebank, jenistransaksi);
             dialogprint();
 
         }
@@ -310,6 +286,9 @@ public class PrintActivity extends Activity implements Runnable{
             @Override
             public void onClick(View view) {
 
+                tarif = datatarifantrian[0];
+                antrian = datatarifantrian[1];
+                totalbayar = datatarifantrian[2];
 
                 Thread t = new Thread() {
                     public void run() {
@@ -326,31 +305,31 @@ public class PrintActivity extends Activity implements Runnable{
                             BILL = BILL
                                     + "================================\n";
 
-                            BILL = BILL + "BUKTI TRANSAKSI";
+                            BILL = BILL + "BUKTI TRANSAKSI         NO:" + antrian;
                             BILL = BILL + "\n";
                             BILL = BILL + "TANGGAL : " + tanggal + "\n";
-                            BILL = BILL + "PUKUL : " + waktu + "\n";
+                            BILL = BILL + "PUKUL   : " + waktu + "\n";
                             BILL = BILL
                                     + "--------------------------------";
-                            BILL = BILL + "JENIS : " + jenistransaksi + "\n";
+                            BILL = BILL + "JENIS   : " + jenistransaksi + "\n";
                             BILL = BILL
                                     + "--------------------------------";
 
                             switch (jenistransaksi){
                                 case "sesama":
 
-                                    BILL = BILL + "\n" + "BANK  : " + bank ;
-                                    BILL = BILL + "\n" + "NO REKENING : " + rektujuan;
-                                    BILL = BILL + "\n" + "NAMA PENERIMA : " + penerima;
-                                    BILL = BILL + "\n" + "NOMINAL : " + nominal;
+                                    BILL = BILL + "\n" + "BANK        : " + bank ;
+                                    BILL = BILL + "\n" + "NO REKENING : " + kodebank +"-"+rektujuan;
+                                    BILL = BILL + "\n" + "PENERIMA    : " + penerima;
+                                    BILL = BILL + "\n" + "NOMINAL     : " + nominal;
 
                                     break;
                                 case "banklain":
 
-                                    BILL = BILL + "\n" + "BANK  : " + bank ;
-                                    BILL = BILL + "\n" + "NO REKENING : " + rektujuan;
-                                    BILL = BILL + "\n" + "NAMA PENERIMA : " + penerima;
-                                    BILL = BILL + "\n" + "NOMINAL : " + nominal;
+                                    BILL = BILL + "\n" + "BANK        : " + bank ;
+                                    BILL = BILL + "\n" + "NO REKENING : " + kodebank +"-"+rektujuan;
+                                    BILL = BILL + "\n" + "PENERIMA    : " + penerima;
+                                    BILL = BILL + "\n" + "NOMINAL     : " + nominal;
 
                                     break;
 
@@ -361,7 +340,7 @@ public class PrintActivity extends Activity implements Runnable{
                                     break;
                                 case "pulsa" :
 
-                                    BILL = BILL + "\n" + "NOMOR : " + rektujuan;
+                                    BILL = BILL + "\n" + "NOMOR   : " + rektujuan;
                                     BILL = BILL + "\n" + "NOMINAL : " + nominal;
 
                                     break;
@@ -369,34 +348,29 @@ public class PrintActivity extends Activity implements Runnable{
                                 case "bpjs" :
 
                                     BILL = BILL + "\n" + "NO BPJS : " + rektujuan;
-                                    BILL = BILL + "\n" + "NAMA : " + penerima;
+                                    BILL = BILL + "\n" + "NAMA    : " + penerima;
 
                                     break;
                                 case "pln" :
 
                                     BILL = BILL + "\n" + "NO PLN : " + rektujuan;
-                                    BILL = BILL + "\n" + "NAMA : " + penerima;
+                                    BILL = BILL + "\n" + "NAMA   : " + penerima;
 
                                     break;
                                 case "cicilan" :
 
                                     BILL = BILL + "\n" + "NOPELANGGAN : " + rektujuan;
-                                    BILL = BILL + "\n" + "NAMA : " + penerima;
-                                    BILL = BILL + "\n" + "LEASING : " + bank;
+                                    BILL = BILL + "\n" + "NAMA        : " + penerima;
+                                    BILL = BILL + "\n" + "LEASING     : " + bank;
 
                                     break;
                             }
 
-
                             BILL = BILL
                                     + "\n--------------------------------";
 
-                            BILL = BILL + "BIAYA ADMINISTRASI :" + "\n";
-                            BILL = BILL + tarif + "\n";
-
-                            BILL = BILL + "TOTAL PEMBAYARAN :" + "\n";
-                            BILL = BILL + totalbayar + "\n";
-
+                            BILL = BILL + "ADMINISTRASI :" + tarif + "\n";
+                            BILL = BILL + "TOTAL        :" + totalbayar + "\n";
                             BILL = BILL
                                     + "================================\n";
                             BILL = BILL + "DI ISI OLEH PETUGAS" + "\n";
@@ -431,19 +405,20 @@ public class PrintActivity extends Activity implements Runnable{
                     }
                 };
 
+
                 t.start();
                 dialogbtnambil.setVisibility(View.INVISIBLE);
 
                 try {
                     t.join();
-                    //coba cik
+                    //memutuskan soket dan mematikan bluetooth
                     if (mBluetoothAdapter != null) {
                         closeSocket(mBluetoothSocket);
                         mBluetoothAdapter.disable();
                     }
-                    myDialog.dismiss();
-                    startActivity(new Intent(PrintActivity.this, HalamanUtamaActivity.class));
-                    finish();
+                    //myDialog.dismiss();
+                    //startActivity(new Intent(PrintActivity.this, HalamanUtamaActivity.class));
+                    //finish();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -471,8 +446,10 @@ public class PrintActivity extends Activity implements Runnable{
 
     }
 
-    public void load_tarifantrian_from_server(final String kartu){
+    //nokartu, rektujuan, nominal, penerima, bank, kodebank, jenistransaksi
+    public String[] load_tarifantrian_from_server(final String nokartu, final String rektujuan, final String nominal, final String penerima, final String bank, final String kodebank, final String jenistransaksi){
         pd.show();
+        final String ar[] = new String[3];
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 url,
@@ -480,25 +457,40 @@ public class PrintActivity extends Activity implements Runnable{
 
                     @Override
                     public void onResponse(String response) {
-                        Log.d("string",response);
+                        Log.d("Respone transaksi  :",response);
 
                         try {
 
-                            JSONArray jsonarray = new JSONArray(response);
 
-                            for(int i=0; i < jsonarray.length(); i++) {
+                            JSONObject jObj = new JSONObject(response);
+                            tarifser = jObj.getString("tarif");
+                            antrianser = jObj.getString("antrian");
 
-                                JSONObject jsonobject = jsonarray.getJSONObject(i);
-
-                                String tarifser = jsonobject.getString("tarif").trim();
-                                String antrianser = jsonobject.getString("antrian").trim();
-
-                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                        pd.hide();
+                        ar[0]= tarifser;
+                        ar[1] =  antrianser;
+
+                        if (nominal !=null){
+
+                            int a = Integer.parseInt(nominal);
+                            int b = Integer.parseInt(tarifser);
+                            int total = a + b;
+
+                            totalbayarser = String.valueOf(total);
+                        }else{
+                            totalbayarser = "SESUAI TAGIHAN";
+                            tarif = "SESUAI TAGIHAN";
+                        }
+
+                        ar[2] = totalbayarser;
+
+                        Log.d("tarif" , tarifser);
+                        Log.d("antrian", antrianser);
+                        Log.d("totalbayar", totalbayarser);
+                        pd.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
@@ -507,7 +499,7 @@ public class PrintActivity extends Activity implements Runnable{
                         if(error != null){
 
                             FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
-                            pd.hide();
+                            pd.dismiss();
                         }
                     }
                 }
@@ -518,12 +510,21 @@ public class PrintActivity extends Activity implements Runnable{
             protected Map<String, String> getParams()
             {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("no_kartu", kartu);
+                //nokartu, rektujuan, nominal, penerima, bank, kodebank, jenistransaksi
+                params.put("nokartu", nokartu);
+                params.put("rektujuan", rektujuan);
+                params.put("nominal", nominal);
+                params.put("penerima", penerima);
+                params.put("bank", bank);
+                params.put("kodebank", kodebank);
+                params.put("jenistransaksi", jenistransaksi);
                 return params;
             }
         };
 
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+
+        return ar;
     }
 }
 

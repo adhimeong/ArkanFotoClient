@@ -91,7 +91,7 @@ public class DataBankAdapter extends ArrayAdapter<DataBankController>{
 
         @Override
         public CharSequence convertResultToString(Object resultValue) {
-            return ((DataBankController) resultValue).getNamabank();
+            return ((DataBankController) resultValue).getKodebank() +"-"+((DataBankController) resultValue).getNamabank();
         }
     };
 }

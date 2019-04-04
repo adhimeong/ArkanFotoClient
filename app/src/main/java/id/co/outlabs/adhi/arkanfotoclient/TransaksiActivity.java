@@ -175,8 +175,12 @@ public class TransaksiActivity extends AppCompatActivity {
                         }
 
                         txtpenerima = editpenerima.getText().toString();
-                        txtbanktujuan = editbanktujuan.getText().toString();
-                        txtkodebank = "014"; //sementara
+                        String hasilautocomplete = editbanktujuan.getText().toString();
+
+                        String[] separated = hasilautocomplete.split("-");
+                        txtkodebank = separated[0];
+                        txtbanktujuan = separated[1];
+
                         break;
 
                     case "tunai":
