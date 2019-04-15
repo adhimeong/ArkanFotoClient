@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -28,22 +27,22 @@ import com.android.volley.toolbox.StringRequest;
 import com.shashank.sony.fancytoastlib.FancyToast;
 import com.skyfishjy.library.RippleBackground;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.text.ParseException;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import id.co.outlabs.adhi.arkanfotoclient.adapter.DataHadiahAdapter;
 import id.co.outlabs.adhi.arkanfotoclient.getset.UserController;
 import id.co.outlabs.adhi.arkanfotoclient.print.UnicodeFormatter;
 import id.co.outlabs.adhi.arkanfotoclient.volley.MySingleton;
@@ -73,10 +72,14 @@ public class PrintActivity extends Activity implements Runnable{
     private BluetoothSocket mBluetoothSocket;
     BluetoothDevice mBluetoothDevice;
 
-    String nokartu, rektujuan, nominal, bank, penerima, kodebank, jenistransaksi, tarif, tarifser, antrianser, totalbayarser, antrian;
+    String nokartu, rektujuan, nominal, bank, penerima, kodebank, jenistransaksi, tarif,  antrian;
     String totalbayar, tanggal, waktu;
+    String nominalprint, totalbayarprint, tarifprint;
     Toast toastgagal;
-    String[] datatarifantrian;
+
+    //format rupiah
+    Locale localeID = new Locale("in", "ID");
+    NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,13 +95,16 @@ public class PrintActivity extends Activity implements Runnable{
         pd = new ProgressDialog(this);
         pd.setMessage("loading");
 
-        //ambil data dari fragment
+
+        //ambil data dari transaksi activity
         rektujuan = getIntent().getStringExtra("rektujuan");
         nominal = getIntent().getStringExtra("nominal");
         penerima = getIntent().getStringExtra("penerima");
         bank = getIntent().getStringExtra("bank");
         kodebank = getIntent().getStringExtra("kodebank");
         jenistransaksi = getIntent().getStringExtra("jenistransaksi");
+
+        //nokartu, rektujuan, nominal, penerima, bank, kodebank, jenistransaksi
 
 
         //animasi
@@ -242,9 +248,7 @@ public class PrintActivity extends Activity implements Runnable{
         public void handleMessage(Message msg) {
             mBluetoothConnectProgressDialog.dismiss();
             Toast.makeText(PrintActivity.this, "DeviceConnected", Toast.LENGTH_SHORT).show();
-            //nokartu, rektujuan, nominal, penerima, bank, kodebank, jenistransaksi
-            datatarifantrian = load_tarifantrian_from_server(nokartu, rektujuan, nominal, penerima, bank, kodebank, jenistransaksi);
-            dialogprint();
+            dialogprint(nokartu, rektujuan, nominal, penerima, bank, kodebank, jenistransaksi);
 
         }
     };
@@ -267,7 +271,8 @@ public class PrintActivity extends Activity implements Runnable{
         return buffer.array();
     }
 
-    public void  dialogprint(){
+    //nokartu, rektujuan, nominal, penerima, bank, kodebank, jenistransaksi
+    public void  dialogprint(final String nokartu, final String rektujuan, final String nominal, final String penerima, final String bank, final String kodebank, final String jenistransaksi){
 
         myDialog = new Dialog(PrintActivity.this);
         myDialog.setContentView(R.layout.dialogprint);
@@ -285,143 +290,255 @@ public class PrintActivity extends Activity implements Runnable{
         dialogbtnambil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //daftar transaksi ke server
+                pd.show();
+                StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                        url,
+                        new Response.Listener<String>() {
 
-                tarif = datatarifantrian[0];
-                antrian = datatarifantrian[1];
-                totalbayar = datatarifantrian[2];
+                            @Override
+                            public void onResponse(String response) {
+                                Log.d("Respone transaksi  :",response);
 
-                Thread t = new Thread() {
-                    public void run() {
-                        try {
-                            OutputStream os = mBluetoothSocket
-                                    .getOutputStream();
-                            String BILL = "";
+                                try {
 
-                            BILL = "           BANK BRI    \n"
-                                    + "             BRILink     \n " +
-                                    "          ARKAN FOTO    \n" +
-                                    " Jln.Cijerah 2 Blok 19 No. 147 \n" +
-                                    "    No.Agen :000001370101851 \n";
-                            BILL = BILL
-                                    + "================================\n";
+                                    JSONObject jObj = new JSONObject(response);
+                                    tarif = jObj.getString("tarif");
+                                    antrian = jObj.getString("antrian");
 
-                            BILL = BILL + "BUKTI TRANSAKSI         NO:" + antrian;
-                            BILL = BILL + "\n";
-                            BILL = BILL + "TANGGAL : " + tanggal + "\n";
-                            BILL = BILL + "PUKUL   : " + waktu + "\n";
-                            BILL = BILL
-                                    + "--------------------------------";
-                            BILL = BILL + "JENIS   : " + jenistransaksi + "\n";
-                            BILL = BILL
-                                    + "--------------------------------";
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
-                            switch (jenistransaksi){
-                                case "sesama":
+                                if (nominal !=null){
 
-                                    BILL = BILL + "\n" + "BANK        : " + bank ;
-                                    BILL = BILL + "\n" + "NO REKENING : " + kodebank +"-"+rektujuan;
-                                    BILL = BILL + "\n" + "PENERIMA    : " + penerima;
-                                    BILL = BILL + "\n" + "NOMINAL     : " + nominal;
+                                    int a = Integer.parseInt(nominal);
+                                    int b = Integer.parseInt(tarif);
+                                    int total = a + b;
 
-                                    break;
-                                case "banklain":
+                                    totalbayar = String.valueOf(total);
+                                    //untuk ngprint
 
-                                    BILL = BILL + "\n" + "BANK        : " + bank ;
-                                    BILL = BILL + "\n" + "NO REKENING : " + kodebank +"-"+rektujuan;
-                                    BILL = BILL + "\n" + "PENERIMA    : " + penerima;
-                                    BILL = BILL + "\n" + "NOMINAL     : " + nominal;
+                                    nominalprint = formatRupiah.format(Double.valueOf(nominal));
+                                    tarifprint = formatRupiah.format(Double.valueOf(tarif));
+                                    totalbayarprint = formatRupiah.format(Double.valueOf(totalbayar));
 
-                                    break;
+                                }else{
+                                    totalbayarprint = "SESUAI TAGIHAN";
+                                    tarifprint = "SESUAI TAGIHAN";
+                                }
 
-                                case "tunai":
+                                pd.dismiss();
 
-                                    BILL = BILL + "\n" + "NOMINAL : " + nominal;
+                                Thread t = new Thread() {
+                                    public void run() {
+                                        try {
+                                            OutputStream os = mBluetoothSocket
+                                                    .getOutputStream();
+                                            String BILL = "";
 
-                                    break;
-                                case "pulsa" :
+                                            BILL = "           BANK BRI    \n"
+                                                    + "             BRILink     \n " +
+                                                    "          ARKAN FOTO    \n" +
+                                                    " Jln.Cijerah 2 Blok 19 No. 147 \n" +
+                                                    "    No.Agen :000001370101851 \n";
+                                            BILL = BILL
+                                                    + "================================\n";
 
-                                    BILL = BILL + "\n" + "NOMOR   : " + rektujuan;
-                                    BILL = BILL + "\n" + "NOMINAL : " + nominal;
+                                            BILL = BILL + "BUKTI TRANSAKSI         NO:" + antrian;
+                                            BILL = BILL + "\n";
+                                            BILL = BILL + "TANGGAL : " + tanggal + "\n";
+                                            BILL = BILL + "PUKUL   : " + waktu + "\n";
+                                            BILL = BILL
+                                                    + "--------------------------------";
+                                            BILL = BILL + "JENIS   : " + jenistransaksi + "\n";
+                                            BILL = BILL
+                                                    + "--------------------------------";
 
-                                    break;
+                                            switch (jenistransaksi){
+                                                case "sesama":
 
-                                case "bpjs" :
+                                                    BILL = BILL + "\n" + "BANK        : " + bank ;
+                                                    BILL = BILL + "\n" + "NO REKENING : " + kodebank +"-"+rektujuan;
+                                                    BILL = BILL + "\n" + "PENERIMA    : " + penerima;
+                                                    BILL = BILL + "\n" + "NOMINAL     : " + nominalprint;
 
-                                    BILL = BILL + "\n" + "NO BPJS : " + rektujuan;
-                                    BILL = BILL + "\n" + "NAMA    : " + penerima;
+                                                    break;
+                                                case "banklain":
 
-                                    break;
-                                case "pln" :
+                                                    BILL = BILL + "\n" + "BANK        : " + bank ;
+                                                    BILL = BILL + "\n" + "NO REKENING : " + kodebank +"-"+rektujuan;
+                                                    BILL = BILL + "\n" + "PENERIMA    : " + penerima;
+                                                    BILL = BILL + "\n" + "NOMINAL     : " + nominalprint;
 
-                                    BILL = BILL + "\n" + "NO PLN : " + rektujuan;
-                                    BILL = BILL + "\n" + "NAMA   : " + penerima;
+                                                    break;
 
-                                    break;
-                                case "cicilan" :
+                                                case "tunai":
 
-                                    BILL = BILL + "\n" + "NOPELANGGAN : " + rektujuan;
-                                    BILL = BILL + "\n" + "NAMA        : " + penerima;
-                                    BILL = BILL + "\n" + "LEASING     : " + bank;
+                                                    BILL = BILL + "\n" + "NOMINAL : " + nominalprint;
 
-                                    break;
+                                                    break;
+                                                case "pulsa" :
+
+                                                    BILL = BILL + "\n" + "NOMOR   : " + rektujuan;
+                                                    BILL = BILL + "\n" + "NOMINAL : " + nominalprint;
+
+                                                    break;
+
+                                                case "bpjs" :
+
+                                                    BILL = BILL + "\n" + "NO BPJS : " + rektujuan;
+                                                    BILL = BILL + "\n" + "NAMA    : " + penerima;
+
+                                                    break;
+                                                case "pln" :
+
+                                                    BILL = BILL + "\n" + "NO PLN : " + rektujuan;
+                                                    BILL = BILL + "\n" + "NAMA   : " + penerima;
+
+                                                    break;
+                                                case "cicilan" :
+
+                                                    BILL = BILL + "\n" + "NOPELANGGAN : " + rektujuan;
+                                                    BILL = BILL + "\n" + "NAMA        : " + penerima;
+                                                    BILL = BILL + "\n" + "LEASING     : " + bank;
+
+                                                    break;
+                                            }
+
+                                            BILL = BILL
+                                                    + "\n--------------------------------";
+
+                                            BILL = BILL + "ADMINISTRASI :" + tarifprint + "\n";
+                                            BILL = BILL + "TOTAL        :" + totalbayarprint + "\n";
+                                            BILL = BILL
+                                                    + "================================\n";
+                                            BILL = BILL + "DI ISI OLEH PETUGAS" + "\n";
+                                            BILL = BILL + "STATUS TRANSAKSI :" + "\n";
+                                            BILL = BILL + "[ ] pending   [ ] selesai " + "\n";
+                                            BILL = BILL
+                                                    + "================================\n";
+                                            BILL = BILL + "\n\n ";
+                                            os.write(BILL.getBytes());
+                                            //This is printer specific code you can comment ==== > Start
+
+                                            // Setting height
+                                            int gs = 29;
+                                            os.write(intToByteArray(gs));
+                                            int h = 104;
+                                            os.write(intToByteArray(h));
+                                            int n = 162;
+                                            os.write(intToByteArray(n));
+
+                                            // Setting Width
+                                            int gs_width = 29;
+                                            os.write(intToByteArray(gs_width));
+                                            int w = 119;
+                                            os.write(intToByteArray(w));
+                                            int n_width = 2;
+                                            os.write(intToByteArray(n_width));
+
+
+                                        } catch (Exception e) {
+                                            Log.e("PrintActivity", "Exe ", e);
+                                        }
+                                    }
+                                };
+
+                                t.start();
+                                dialogbtnambil.setVisibility(View.INVISIBLE);
+
+                                try {
+                                    t.join();
+                                    //memutuskan soket dan mematikan bluetooth
+                                    if (mBluetoothAdapter != null) {
+                                        closeSocket(mBluetoothSocket);
+                                        mBluetoothAdapter.disable();
+                                    }
+                                    //myDialog.dismiss();
+                                    //startActivity(new Intent(PrintActivity.this, HalamanUtamaActivity.class));
+                                    //finish();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                if(error != null){
 
-                            BILL = BILL
-                                    + "\n--------------------------------";
-
-                            BILL = BILL + "ADMINISTRASI :" + tarif + "\n";
-                            BILL = BILL + "TOTAL        :" + totalbayar + "\n";
-                            BILL = BILL
-                                    + "================================\n";
-                            BILL = BILL + "DI ISI OLEH PETUGAS" + "\n";
-                            BILL = BILL + "STATUS TRANSAKSI :" + "\n";
-                            BILL = BILL + "[ ] selesai    [ ] pending" + "\n";
-                            BILL = BILL
-                                    + "================================\n";
-                            BILL = BILL + "\n\n ";
-                            os.write(BILL.getBytes());
-                            //This is printer specific code you can comment ==== > Start
-
-                            // Setting height
-                            int gs = 29;
-                            os.write(intToByteArray(gs));
-                            int h = 104;
-                            os.write(intToByteArray(h));
-                            int n = 162;
-                            os.write(intToByteArray(n));
-
-                            // Setting Width
-                            int gs_width = 29;
-                            os.write(intToByteArray(gs_width));
-                            int w = 119;
-                            os.write(intToByteArray(w));
-                            int n_width = 2;
-                            os.write(intToByteArray(n_width));
-
-
-                        } catch (Exception e) {
-                            Log.e("PrintActivity", "Exe ", e);
+                                    FancyToast.makeText(getApplicationContext(),"Coba Lagi, Internet Tidak Stabil",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
+                                    pd.dismiss();
+                                }
+                            }
                         }
+
+                )
+                {
+                    @Override
+                    protected Map<String, String> getParams()
+                    {
+                        Map<String, String> params = new HashMap<String, String>();
+                        //nokartu, rektujuan, nominal, penerima, bank, kodebank, jenistransaksi
+                        switch (jenistransaksi){
+                            case "tunai":
+                                params.put("nokartu", nokartu);
+                                params.put("nominal", nominal);
+                                params.put("kodebank", kodebank);
+                                params.put("jenistransaksi", jenistransaksi);
+                                //rektujuan, penerima, bank kosong
+                                break;
+
+                            case "pulsa":
+                                params.put("nokartu", nokartu);
+                                params.put("rektujuan", rektujuan);
+                                params.put("nominal", nominal);
+                                params.put("jenistransaksi", jenistransaksi);
+                                //penerima, bank, kodebank kosong
+                                break;
+
+                            case "bpjs" :
+                                params.put("nokartu", nokartu);
+                                params.put("rektujuan", rektujuan);
+                                params.put("penerima", penerima);
+                                params.put("jenistransaksi", jenistransaksi);
+                                //nominal, bank, kodebank kosong
+                                break;
+
+                            case "pln" :
+                                params.put("nokartu", nokartu);
+                                params.put("rektujuan", rektujuan);
+                                params.put("penerima", penerima);
+                                params.put("jenistransaksi", jenistransaksi);
+                                //nominal, bank, kodebank kosong
+                                break;
+
+                            case "cicilan":
+                                params.put("nokartu", nokartu);
+                                params.put("rektujuan", rektujuan);
+                                params.put("penerima", penerima);
+                                params.put("bank", bank);
+                                params.put("jenistransaksi", jenistransaksi);
+                                //nominal, kodebank
+                                break;
+
+                            default :
+                                params.put("nokartu", nokartu);
+                                params.put("rektujuan", rektujuan);
+                                params.put("nominal", nominal);
+                                params.put("penerima", penerima);
+                                params.put("bank", bank);
+                                params.put("kodebank", kodebank);
+                                params.put("jenistransaksi", jenistransaksi);
+                                break;
+                        }
+
+                        return params;
                     }
                 };
 
-
-                t.start();
-                dialogbtnambil.setVisibility(View.INVISIBLE);
-
-                try {
-                    t.join();
-                    //memutuskan soket dan mematikan bluetooth
-                    if (mBluetoothAdapter != null) {
-                        closeSocket(mBluetoothSocket);
-                        mBluetoothAdapter.disable();
-                    }
-                    //myDialog.dismiss();
-                    //startActivity(new Intent(PrintActivity.this, HalamanUtamaActivity.class));
-                    //finish();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
 
             }
         });
@@ -446,85 +563,5 @@ public class PrintActivity extends Activity implements Runnable{
 
     }
 
-    //nokartu, rektujuan, nominal, penerima, bank, kodebank, jenistransaksi
-    public String[] load_tarifantrian_from_server(final String nokartu, final String rektujuan, final String nominal, final String penerima, final String bank, final String kodebank, final String jenistransaksi){
-        pd.show();
-        final String ar[] = new String[3];
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                url,
-                new Response.Listener<String>() {
-
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("Respone transaksi  :",response);
-
-                        try {
-
-
-                            JSONObject jObj = new JSONObject(response);
-                            tarifser = jObj.getString("tarif");
-                            antrianser = jObj.getString("antrian");
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        ar[0]= tarifser;
-                        ar[1] =  antrianser;
-
-                        if (nominal !=null){
-
-                            int a = Integer.parseInt(nominal);
-                            int b = Integer.parseInt(tarifser);
-                            int total = a + b;
-
-                            totalbayarser = String.valueOf(total);
-                        }else{
-                            totalbayarser = "SESUAI TAGIHAN";
-                            tarif = "SESUAI TAGIHAN";
-                        }
-
-                        ar[2] = totalbayarser;
-
-                        Log.d("tarif" , tarifser);
-                        Log.d("antrian", antrianser);
-                        Log.d("totalbayar", totalbayarser);
-                        pd.dismiss();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if(error != null){
-
-                            FancyToast.makeText(getApplicationContext(),"Terjadi ganguan dengan koneksi server",FancyToast.LENGTH_LONG, FancyToast.ERROR,true).show();
-                            pd.dismiss();
-                        }
-                    }
-                }
-
-        )
-        {
-            @Override
-            protected Map<String, String> getParams()
-            {
-                Map<String, String> params = new HashMap<String, String>();
-                //nokartu, rektujuan, nominal, penerima, bank, kodebank, jenistransaksi
-                params.put("nokartu", nokartu);
-                params.put("rektujuan", rektujuan);
-                params.put("nominal", nominal);
-                params.put("penerima", penerima);
-                params.put("bank", bank);
-                params.put("kodebank", kodebank);
-                params.put("jenistransaksi", jenistransaksi);
-                return params;
-            }
-        };
-
-        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
-
-        return ar;
-    }
 }
 
